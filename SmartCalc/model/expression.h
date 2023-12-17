@@ -60,9 +60,9 @@ class Expression {
     unsigned int priority_{};
 
     void SetPrirority() {
-      if (operation_ == PLUS || operation_ == MINUS || operation_ == MOD) {
+      if (operation_ == PLUS || operation_ == MINUS) {
         priority_ = 1;
-      } else if (operation_ == MUL || operation_ == DIV) {
+      } else if (operation_ == MUL || operation_ == DIV || operation_ == MOD) {
         priority_ = 2;
       } else if (operation_ == EXP || operation_ == UNARMINUS) {
         priority_ = 3;

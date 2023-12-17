@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(smartcalc_v2 VERSION 0.1 LANGUAGES CXX)
+project(SmartCalc_v2 VERSION 0.1 LANGUAGES CXX)
 find_package(QT NAMES Qt5 Qt6 REQUIRED COMPONENTS Widgets)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_C_STANDARD 11)
@@ -43,12 +43,12 @@ set(PROJECT_SOURCES
 
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(calc
+    qt_add_executable(SmartCalc
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
 # Define target properties for Android with Qt 6 as:
-#    set_property(TARGET calc APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#    set_property(TARGET SmartCalc APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
@@ -60,17 +60,17 @@ else()
 # Define properties for Android with Qt 5 after find_package() calls as:
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
-        add_executable(calc
+        add_executable(SmartCalc
             ${PROJECT_SOURCES}
         )
     endif()
 
 endif()
 
-#target_link_libraries(calc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets  Qt5::PrintSupport)
-target_link_libraries(calc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+#target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets  Qt5::PrintSupport)
+target_link_libraries(SmartCalc PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
-set_target_properties(calc PROPERTIES
+set_target_properties(SmartCalc PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -79,7 +79,7 @@ set_target_properties(calc PROPERTIES
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(calc)
+    qt_finalize_executable(SmartCalc)
 endif()
 
 

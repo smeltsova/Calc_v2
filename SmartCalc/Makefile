@@ -1,5 +1,6 @@
 CXX = g++
 CXXFLAGS = -Wall -Werror -Wextra -std=c++17
+TARGET:= ./Application/SmartCalc.app
 TEST = test/*.cc
 GTEST_DIR = test
 EXPRESSION = model/expression.cc
@@ -16,77 +17,26 @@ all: clean install open
 .PHONY : all
 
 install: clean
-	mkdir build && cd build && cmake  ../CMakeLists.txt && make
-ifeq ($(OS),Darwin)
-	mv build/calc.app ~/Desktop
-else
-	mv build/calc ~/Desktop
-endif
+	mkdir -p build && mkdir -p Application \
+	&& cd build && cmake -DEXECUTABLE_OUTPUT_PATH="../Application" ../ && cmake --build . 
 	rm -rf build/
 .PHONY : install
 
-
 uninstall:
-ifeq ($(OS),Darwin)
-	rm -rf ~/Desktop/calc.app
-else
-	rm -rf ~/Desktop/calc
-endif
+	rm -rf Application
 .PHONY : uninstall
 
 open:
-ifeq ($(OS),Darwin)
-	open -n ~/Desktop/calc.app --args -AppCommandLineArg
-else
-	~/Desktop/calc
-endif
+	open $(TARGET)
 .PHONY : open	
 
 calculator.o: $(EXPRESSION) $(CREDITCALCULATOR)
 	@$(CXX) $(CXXFLAGS) -c $(EXPRESSION) $(CREDITCALCULATOR)
-.PHONY : calculator.o
 
-calculator.a: calculator.o
-	@ar rcs calculator.a *.o
-.PHONY : calculator.a
-
-test: clean calculator.a 
-	@$(CXX) $(CXXFLAGS) $(TEST) calculator.a -o unit_test -lgtest -lpthread
+test: clean calculator.o
+	@$(CXX) $(CXXFLAGS) $(TEST) calculator.o -o unit_test -lgtest -lpthread
 	@./unit_test
 .PHONY : test
-
-gcov_report: clean calculator.o
-ifeq ($(OS),Darwin)
-	$(CXX) $(CXXFLAGS) -lgtest $(CREDITCALCULATOR) $(EXPRESSION) $(TEST) $(TESTLIBS)  -o  gcov_test 
-else
-	$(CXX) $(CXXFLAGS) $(CREDITCALCULATOR) $(EXPRESSION) $(TEST) -o gcov_test $(TESTLIBS)
-endif
-	@chmod +x * 
-	./gcov_test
-	lcov -t "gcov_test" -o gcov_test.info --no-external -c -d .
-	genhtml -o report/ gcov_test.info
-ifeq ($(OS),Darwin)
-	open ./report/index.html
-else
-	xdg-open ./report/index.html
-endif
-.PHONY : gcov_report
-
-dist:
-	mkdir SmartCalc/
-	mkdir SmartCalc/src
-	cp -r controller model test view Makefile CMakeLists.txt README.pdf SmartCalc/src
-	tar -cvzf SmartCalc.tar.gz SmartCalc
-	rm -rf SmartCalc
-.PHONY : dist
-
-format:
-	clang-format -style=Google -i */*.cc  */*.h
-.PHONY : format
-
-check: 
-	clang-format -style=Google -n */*.cc  */*.h  */*.cpp --verbose
-.PHONY : check
 
 clean:
 	@rm -rf *.o *.a *.cmake CMakeCache.txt
@@ -96,6 +46,4 @@ clean:
 	@rm -rf report
 	@rm -rf unit_test
 	@rm -rf build/
-	@rm -rf Archive_calc
-	@rm -rf dist-newstyle/
 .PHONY : clean

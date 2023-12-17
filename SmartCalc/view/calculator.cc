@@ -130,7 +130,7 @@ void Calculator::on_pushButton_graph_clicked() {
     ui_->customPlot->clearGraphs();
     x_.clear();
     y_.clear();
-    h_ = 0.1;
+    N_ = 1e6;
     xBegin_ = ui_->spinBox_xMin->value();
     xEnd_ = ui_->spinBox_xMax->value() + h_;
     ui_->customPlot->xAxis->setRange(ui_->spinBox_xMin->value(),
@@ -138,11 +138,8 @@ void Calculator::on_pushButton_graph_clicked() {
     ui_->customPlot->yAxis->setRange(ui_->spinBox_yMin->value(),
                                      ui_->spinBox_yMax->value());
     X_ = xBegin_;
-    N_ = (xEnd_ - xBegin_) / h_ + 2;
+    h_ = (xEnd_ - xBegin_) / N_;
 
-    int graph_counter = 0;
-    int non_nun_count = 0;
-    int non_nun = 0;
     for (X_ = xBegin_; X_ <= xEnd_; X_ += h_) {
       x_.push_back(X_);
       y_.push_back(controller_.Calculate(X_));
